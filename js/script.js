@@ -1,10 +1,30 @@
 var crudApp = new function () {
 
     // AN ARRAY OF JSON OBJECTS WITH VALUES.
+    this.myInventarios=[];
+    var obj = JSON.parse(localStorage.getItem('LSTransaccion'));
+      
+    if(localStorage.getItem('LSTransaccion') && Object.getOwnPropertyNames(obj).length>1 ){
+    
+    
+        for (x of obj) {
+
+            this.myInventarios.push({ ID: x.ID, Producto: x.Producto, Transaccion: x.Transaccion, Cantidad: x.Cantidad });
+        }
+    
+    }
+     else{
+       
     this.myInventarios = [
-        { ID: '1', Producto: 'Pelota', Transaccion: 'Ingreso', Cantidad: 0 },
+        
+        { ID: '1', Producto: 'Pelota', Transaccion: 'Ingreso', Cantidad: 0 }
    
     ]
+    
+   }
+
+   
+
 
     this.Transacción = ['Ingreso', 'Salida', 'Ajuste'];
     this.Producto = [];
@@ -33,31 +53,20 @@ var crudApp = new function () {
         // CREATE A TABLE.
         var table = document.createElement('table');
         table.setAttribute('id', 'TransaccionsTable');     // SET TABLE ID.
-
         var tr = table.insertRow(-1);               // CREATE A ROW (FOR HEADER).
-
         for (var h = 0; h < this.col.length; h++) {
             // ADD TABLE HEADER.
-            var th = document.createElement('th');
-          
-
-           // th.setAttribute("id",this.col[h].replace('_', ' '));
-            
-           
+            var th = document.createElement('th');           
             th.innerHTML = this.col[h].replace('_', ' ');
-            
             tr.appendChild(th);
         }
-
         // ADD ROWS USING JSON DATA.
         for (var i = 0; i < this.myInventarios.length; i++) {
 
             tr = table.insertRow(-1);           // CREATE A NEW ROW.
-
             for (var j = 0; j < this.col.length; j++) {
                 var tabCell = tr.insertCell(-1);
                 tabCell.innerHTML = this.myInventarios[i][this.col[j]];
-
             }
 
             // DYNAMICALLY CREATE AND ADD ELEMENTS TO TABLE CELLS WITH EVENTS.
@@ -85,17 +94,7 @@ var crudApp = new function () {
             btSave.setAttribute('onclick', 'crudApp.Save(this)');       // ADD THE BUTTON's 'onclick' EVENT.
             this.td.appendChild(btSave);
 
-            // *** UPDATE.
-            tr.appendChild(this.td);
-            var btUpdate = document.createElement('input');
-
-            btUpdate.setAttribute('type', 'button');    // SET ATTRIBUTES.
-            btUpdate.setAttribute('value', 'Update');
-            btUpdate.setAttribute('id', 'Edit' + i);
-            btUpdate.setAttribute('style', 'background-color:#44CCEB;');
-            btUpdate.setAttribute('onclick', 'crudApp.Update(this)');   // ADD THE BUTTON's 'onclick' EVENT.
-            this.td.appendChild(btUpdate);
-
+      
             // *** DELETE.
             this.td = document.createElement('th');
             tr.appendChild(this.td);
@@ -231,7 +230,7 @@ var crudApp = new function () {
                 ele.setAttribute('type', 'text');
                 ele.setAttribute('value', td.innerText);
                 td.innerText = '';
-                td.appendChild(ele);
+                td.appendChild(ele); 
             }}
         }
 
@@ -248,10 +247,17 @@ var crudApp = new function () {
 
     // DELETE DATA.
     this.Delete = function (oButton) {
+        
         var activeRow = oButton.parentNode.parentNode.rowIndex;
+        
         this.myInventarios.splice((activeRow - 1), 1); 
+
+
            // DELETE THE ACTIVE ROW.
-        this.createTable();                         // REFRESH THE TABLE.
+        this.createTable();      
+        
+        addTransaccion(this.myInventarios)
+        // REFRESH THE TABLE.
     };
 
     // SAVE DATA.
@@ -264,9 +270,14 @@ var crudApp = new function () {
             var td = tab.getElementsByTagName("td")[i];
             if (td.childNodes[0].getAttribute('type') == 'text' || td.childNodes[0].tagName == 'SELECT') {  // CHECK IF ELEMENT IS A TEXTBOX OR SELECT.
                 this.myInventarios[(activeRow - 1)][this.col[i]] = td.childNodes[0].value;      // SAVE THE VALUE.
+            
             }
+        
+        
+        
         }
         this.createTable();     // REFRESH THE TABLE.
+        addTransaccion(this.myInventarios)
     }
 
     // CREATE NEW.
@@ -295,13 +306,6 @@ var crudApp = new function () {
         obj[this.col[0]] = this.myInventarios.length + 1;  
      
 
-        console.log(obj[this.col[0]])
-       console.log(obj[this.col[1]])
-       console.log(obj[this.col[2]])
-       console.log(obj[this.col[3]])
-        addTransaccion(obj[this.col[0]],obj[this.col[2]],obj[this.col[3]],obj[this.col[1]])
- 
-
            // NEW ID.
         
 
@@ -309,6 +313,9 @@ var crudApp = new function () {
             this.myInventarios.push(obj);             // PUSH (ADD) DATA TO THE JSON ARRAY.
             this.createTable();                 // REFRESH THE TABLE.
         }
+        addTransaccion(this.myInventarios)
+ 
     }
+
  }
 crudApp.createTable();

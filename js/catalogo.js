@@ -134,34 +134,34 @@ function cargarDatos(){
 //Función para llenar la tabla en página donde se presentán los productos
 
 function LlenarTablaP(){
-//function LlenadoTabla(){
+    //function LlenadoTabla(){
+        
+        var scriptTabla = "";
     
-    var scriptTabla = "";
-
-    for (let index = 0; index < productos.length; index++ ){
-     
-    scriptTabla += '<tr>';
-    scriptTabla += '<td>' + productos[index].codigo + '</td>';
-    scriptTabla += '<td>' + productos[index].nombre + '</br>';
-    scriptTabla += '<td>' + productos[index].saldo + '</br>';
-    scriptTabla +=  '<label for="idCantidad" >' + "Cantidad:" +'</label>';
-    scriptTabla += '<input type="number" class="input"  id="idCantidad'+ productos[index].codigo+'">';
-    scriptTabla +=  '</input>';
-    scriptTabla +=  '</td>';
-    scriptTabla += '<td>' + productos[index].precio + '</br>';
-    scriptTabla += '<button type="button" class="btn btn-success" onclick="addCarrito('+productos[index].codigo+')">Agregar al carrito</button>';
-    scriptTabla += '</td>';
-    scriptTabla += '<td><img src="'+ productos[index].imagen + '"  width="50" height="50"/></td>';
-    scriptTabla += '</tr>'
-
+        for (let index = 0; index < productos.length; index++ ){
+         
+        scriptTabla += '<tr>';
+        scriptTabla += '<td>' + productos[index].codigo + '</td>';
+        scriptTabla += '<td>' + productos[index].nombre + '</br>';
+        scriptTabla += '<td>' + productos[index].saldo + '</br>';
+        scriptTabla +=  '<label for="idCantidad" >' + "Cantidad:" +'</label>';
+        scriptTabla += '<input type="number" class="input"  id="idCantidad'+ productos[index].codigo+'">';
+        scriptTabla +=  '</input>';
+        scriptTabla +=  '</td>';
+        scriptTabla += '<td>' + productos[index].precio + '</br>';
+        scriptTabla += '<button type="button" class="btn btn-success" onclick="addCarrito('+productos[index].codigo+')">Agregar al carrito</button>';
+        scriptTabla += '</td>';
+        scriptTabla += '<td><img src="'+ productos[index].imagen + '"  width="50" height="50"/></td>';
+        scriptTabla += '</tr>'
+    
+        }
+        
+        document.getElementById("idTableBody2").innerHTML = scriptTabla;
+    
+        
+    
+        
     }
-    
-    document.getElementById("idTableBody2").innerHTML = scriptTabla;
-
-    
-
-    
-}
 
 var ruta = "";
 /*se convierte la imagen cargada en el input */
@@ -195,18 +195,14 @@ var transacciones = [];
 
 
 
-function addTransaccionArray(cod,transa,cant,prod){
+
+function deleteTransaccionArray(ID){
    
-    console.log("add")
-    console.log(cod,transa,cant,prod)
+    var index=BuscarTransaccion(ID);
 
     var objTransaccion = new CTransaccion(cod, transa, cant,prod);
-    this.transacciones.push(objTransaccion);
-
+    this.transacciones.splice(index, 1);
 }
-
-
-
 
 function BuscarTransaccion(ID){
     for(let index = 0; index < transacciones.length; index++){
@@ -219,34 +215,27 @@ function BuscarTransaccion(ID){
 
 
 
-function addTransaccion (cod,trans,cant,prod){
-
-    
-    //Validar campos
-  
-
-    cargarDatosTrans();
+function addTransaccion (objjson){
 
 
-    //Agregar el Transaccion al array
-    addTransaccionArray(cod,trans,cant,prod);
-      
     //guardar en Local Storage el Transaccion
-      setTransaccion();
+      setTransaccion(objjson);
 
 
 }
 
 //Guardar objeto en localStorage
 
-function setTransaccion(){
-    localStorage.setItem('LSTransaccion', JSON.stringify(this.transacciones));
+function setTransaccion(objjson){
+    localStorage.removeItem('LSTransaccion')
+    localStorage.setItem('LSTransaccion', JSON.stringify(objjson));
 
 }
 
 //Función para cargar los datos al array
 function cargarDatosTrans(){
     if(localStorage.getItem('LSTransaccion')){
- transacciones = JSON.parse(localStorage.getItem('LSTransaccion'));}
- return;
+ this.transacciones = JSON.parse(localStorage.getItem('LSTransaccion'));}
+ 
+ return this.transacciones;
 }
