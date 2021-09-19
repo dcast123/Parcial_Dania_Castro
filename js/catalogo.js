@@ -1,9 +1,10 @@
 var productos = [];        
 
 
-function Producto (codigo, nombre, precio, imagen) {
+function Producto (codigo, nombre, saldo,precio, imagen) {
 this.codigo = codigo,
 this.nombre = nombre,
+this.saldo = saldo,
 this.precio = precio,
 this.imagen = imagen
 }
@@ -11,9 +12,10 @@ this.imagen = imagen
 function addProductoArray(){
     var codigo = document.getElementById("idCodigo").value;
     var nombre = document.getElementById("idNombre").value;
+    var saldo = document.getElementById("idSaldo").value;
     var precio = document.getElementById("idPrecio").value;
     var imagen = ruta
-    var producto = new Producto(codigo, nombre, precio, imagen);
+    var producto = new Producto(codigo, nombre, saldo,precio, imagen);
     productos.push(producto);
 }
 
@@ -51,6 +53,8 @@ function LlenarTabla(){
         scriptTabla += "<tr>";
         scriptTabla += "<td>" + productos[index].codigo+ "</td>" ;
         scriptTabla += "<td>" + productos[index].nombre + "</td>" ;
+        
+        scriptTabla += "<td>" + productos[index].saldo + "</td>" ;
         scriptTabla += "<td>" + productos[index].precio + "</td>" ;
         scriptTabla += '<td><img src="'+productos[index].imagen +'" /></td>' ;
         scriptTabla += "</tr>";
@@ -70,6 +74,10 @@ function validarCampos(){
         alert("El campo NOMBRE no debe quedar vacío");
         return false;
     }
+    if (document.getElementById("idSaldo").value == ""){
+        alert("El campo Saldo no debe quedar vacío");
+        return false;
+    }
     if (document.getElementById("idPrecio").value == ""){
         alert("El campo PRECIO no debe quedar vacío");
         return false;
@@ -83,6 +91,7 @@ function validarCampos(){
 function cleanControls(){
     document.getElementById("idCodigo").value = "";
     document.getElementById("idNombre").value = "";
+    document.getElementById("idSaldo").value = "";
     document.getElementById("idPrecio").value = "";
     document.getElementById("idImagen").value = "";
 }
@@ -134,6 +143,7 @@ function LlenarTablaP(){
     scriptTabla += '<tr>';
     scriptTabla += '<td>' + productos[index].codigo + '</td>';
     scriptTabla += '<td>' + productos[index].nombre + '</br>';
+    scriptTabla += '<td>' + productos[index].saldo + '</br>';
     scriptTabla +=  '<label for="idCantidad" >' + "Cantidad:" +'</label>';
     scriptTabla += '<input type="number" class="input"  id="idCantidad'+ productos[index].codigo+'">';
     scriptTabla +=  '</input>';
@@ -169,5 +179,3 @@ function previewFile() {
       reader.readAsDataURL(file);
     }
 }
-
-
