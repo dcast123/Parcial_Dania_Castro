@@ -249,7 +249,8 @@ var crudApp = new function () {
     // DELETE DATA.
     this.Delete = function (oButton) {
         var activeRow = oButton.parentNode.parentNode.rowIndex;
-        this.myInventarios.splice((activeRow - 1), 1);    // DELETE THE ACTIVE ROW.
+        this.myInventarios.splice((activeRow - 1), 1); 
+           // DELETE THE ACTIVE ROW.
         this.createTable();                         // REFRESH THE TABLE.
     };
 
@@ -280,11 +281,7 @@ var crudApp = new function () {
             if (td.childNodes[0].getAttribute('type') == 'text' || td.childNodes[0].tagName == 'SELECT') {      // CHECK IF ELEMENT IS A TEXTBOX OR SELECT.
                 var txtVal = td.childNodes[0].value;
                 if (txtVal != '') {
-                    obj[this.col[i]] = txtVal.trim();
-                    
-
-
-
+                    obj[this.col[i]] = txtVal.trim();   
                 }
                 else {
                     obj = '';
@@ -297,11 +294,12 @@ var crudApp = new function () {
 
         obj[this.col[0]] = this.myInventarios.length + 1;  
      
+
         console.log(obj[this.col[0]])
        console.log(obj[this.col[1]])
        console.log(obj[this.col[2]])
        console.log(obj[this.col[3]])
-        addTransaccion(obj[this.col[0]],obj[this.col[1]],obj[this.col[2]],obj[this.col[3]])
+        addTransaccion(obj[this.col[0]],obj[this.col[2]],obj[this.col[3]],obj[this.col[1]])
  
 
            // NEW ID.

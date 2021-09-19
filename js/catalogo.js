@@ -196,12 +196,13 @@ var transacciones = [];
 
 
 function addTransaccionArray(cod,transa,cant,prod){
-    console.log("Aca se carga");
+   
+    console.log("add")
     console.log(cod,transa,cant,prod)
-
 
     var objTransaccion = new CTransaccion(cod, transa, cant,prod);
     this.transacciones.push(objTransaccion);
+
 }
 
 
@@ -218,21 +219,17 @@ function BuscarTransaccion(ID){
 
 
 
-
-
-
 function addTransaccion (cod,trans,cant,prod){
 
-
-
+    
     //Validar campos
   
 
-    cargarDatosTrans(cod,prod,trans,cant);
+    cargarDatosTrans();
 
 
     //Agregar el Transaccion al array
-    addTransaccionArray();
+    addTransaccionArray(cod,trans,cant,prod);
       
     //guardar en Local Storage el Transaccion
       setTransaccion();
