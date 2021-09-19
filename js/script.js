@@ -2,12 +2,22 @@ var crudApp = new function () {
 
     // AN ARRAY OF JSON OBJECTS WITH VALUES.
     this.myInventarios = [
-        { ID: '1', Producto: 'Pelota', Transacción: 'Ingreso Inicial', Cantidad: 125.60 },
+        { ID: '1', Producto: 'Pelota', Transaccion: 'Ingreso', Cantidad: 0 },
    
     ]
 
     this.Transacción = ['Ingreso', 'Salida', 'Ajuste'];
-    this.Producto = ['Pelota', 'Ropa', 'Comida'];
+    this.Producto = [];
+    if(localStorage.getItem('LSProducto')){
+        this.productos = JSON.parse(localStorage.getItem('LSProducto'));}
+
+
+
+    for (let index = 0; index < this.productos.length; index++ ){
+     
+        this.Producto.push(this.productos[index].codigo+'-'+this.productos[index].nombre)
+    
+        }
     this.col = [];
 
     this.createTable = function () {
@@ -16,19 +26,26 @@ var crudApp = new function () {
             for (var key in this.myInventarios[i]) {
                 if (this.col.indexOf(key) === -1) {
                     this.col.push(key);
+                    console.log(key);
                 }
             }
         }
         // CREATE A TABLE.
         var table = document.createElement('table');
-        table.setAttribute('id', 'booksTable');     // SET TABLE ID.
+        table.setAttribute('id', 'TransaccionsTable');     // SET TABLE ID.
 
         var tr = table.insertRow(-1);               // CREATE A ROW (FOR HEADER).
 
         for (var h = 0; h < this.col.length; h++) {
             // ADD TABLE HEADER.
             var th = document.createElement('th');
+          
+
+           // th.setAttribute("id",this.col[h].replace('_', ' '));
+            
+           
             th.innerHTML = this.col[h].replace('_', ' ');
+            
             tr.appendChild(th);
         }
 
@@ -40,12 +57,13 @@ var crudApp = new function () {
             for (var j = 0; j < this.col.length; j++) {
                 var tabCell = tr.insertCell(-1);
                 tabCell.innerHTML = this.myInventarios[i][this.col[j]];
+
             }
 
             // DYNAMICALLY CREATE AND ADD ELEMENTS TO TABLE CELLS WITH EVENTS.
 
             this.td = document.createElement('td');
-
+           
             // *** CANCEL OPTION.
             tr.appendChild(this.td);
             var lblCancel = document.createElement('label');
@@ -59,7 +77,7 @@ var crudApp = new function () {
             // *** SAVE.
             tr.appendChild(this.td);
             var btSave = document.createElement('input');
-
+            
             btSave.setAttribute('type', 'button');      // SET ATTRIBUTES.
             btSave.setAttribute('value', 'Save');
             btSave.setAttribute('id', 'Save' + i);
@@ -101,6 +119,7 @@ var crudApp = new function () {
                 if (j == 2) {   // WE'LL ADD A DROPDOWN LIST AT THE SECOND COLUMN (FOR Transacción).
 
                     var select = document.createElement('select');      // CREATE AND ADD A DROPDOWN LIST.
+                     
                     select.innerHTML = '<option value=""></option>';
                     for (k = 0; k < this.Transacción.length; k++) {
                         select.innerHTML = select.innerHTML +
@@ -114,9 +133,9 @@ var crudApp = new function () {
 
                         var select = document.createElement('select');      // CREATE AND ADD A DROPDOWN LIST.
                         select.innerHTML = '<option value=""></option>';
-                        for (k = 0; k < this.Producto.length; k++) {
+                        for (k = 0; k < this.productos.length; k++) {
                             select.innerHTML = select.innerHTML +
-                                '<option value="' + this.Producto[k] + '">' + this.Producto[k] + '</option>';
+                                '<option value="' + this.productos[k].codigo+ '">' + this.productos[k].codigo+'-'+this.productos[k].nombre + '</option>';
                         }
                         newCell.appendChild(select);
                     }
@@ -166,7 +185,7 @@ var crudApp = new function () {
         var btUpdate = document.getElementById('Edit' + (activeRow - 1));
         btUpdate.setAttribute('style', 'display:block; margin:0 auto; background-color:#44CCEB;');
 
-        var tab = document.getElementById('booksTable').rows[activeRow];
+        var tab = document.getElementById('TransaccionsTable').rows[activeRow];
 
         for (i = 0; i < this.col.length; i++) {
             var td = tab.getElementsByTagName("td")[i];
@@ -178,7 +197,7 @@ var crudApp = new function () {
     // EDIT DATA.
     this.Update = function (oButton) {
         var activeRow = oButton.parentNode.parentNode.rowIndex;
-        var tab = document.getElementById('booksTable').rows[activeRow];
+        var tab = document.getElementById('TCreateNewransaccionsTable').rows[activeRow];
 
         // SHOW A DROPDOWN LIST WITH A LIST OF CATEGORIES.
         for (i = 1; i < 4; i++) {
@@ -187,9 +206,9 @@ var crudApp = new function () {
                 var td = tab.getElementsByTagName("td")[i];
                 var ele = document.createElement('select');      // DROPDOWN LIST.
                 ele.innerHTML = '<option value="' + td.innerText + '">' + td.innerText + '</option>';
-                for (k = 0; k < this.Producto.length; k++) {
+                for (k = 0; k < this.productos.length; k++) {
                     ele.innerHTML = ele.innerHTML +
-                        '<option value="' + this.Producto[k] + '">' + this.Producto[k] + '</option>';
+                        '<option value="' + this.productos[k].codigo+ '">' + this.productos[k].codigo+'-'+this.productos[k].nombre + '</option>';
                 }
                 td.innerText = '';
                 td.appendChild(ele);
@@ -237,7 +256,7 @@ var crudApp = new function () {
     // SAVE DATA.
     this.Save = function (oButton) {
         var activeRow = oButton.parentNode.parentNode.rowIndex;
-        var tab = document.getElementById('booksTable').rows[activeRow];
+        var tab = document.getElementById('TransaccionsTable').rows[activeRow];
 
         // UPDATE myInventarios ARRAY WITH VALUES.
         for (i = 1; i < this.col.length; i++) {
@@ -252,7 +271,7 @@ var crudApp = new function () {
     // CREATE NEW.
     this.CreateNew = function (oButton) {
         var activeRow = oButton.parentNode.parentNode.rowIndex;
-        var tab = document.getElementById('booksTable').rows[activeRow];
+        var tab = document.getElementById('TransaccionsTable').rows[activeRow];
         var obj = {};
 
         // ADD NEW VALUE TO myInventarios ARRAY.
@@ -262,6 +281,10 @@ var crudApp = new function () {
                 var txtVal = td.childNodes[0].value;
                 if (txtVal != '') {
                     obj[this.col[i]] = txtVal.trim();
+                    
+
+
+
                 }
                 else {
                     obj = '';
@@ -269,8 +292,20 @@ var crudApp = new function () {
                     break;
                 }
             }
+
         }
-        obj[this.col[0]] = this.myInventarios.length + 1;     // NEW ID.
+
+        obj[this.col[0]] = this.myInventarios.length + 1;  
+     
+        console.log(obj[this.col[0]])
+       console.log(obj[this.col[1]])
+       console.log(obj[this.col[2]])
+       console.log(obj[this.col[3]])
+        addTransaccion(obj[this.col[0]],obj[this.col[1]],obj[this.col[2]],obj[this.col[3]])
+ 
+
+           // NEW ID.
+        
 
         if (Object.keys(obj).length > 0) {      // CHECK IF OBJECT IS NOT EMPTY.
             this.myInventarios.push(obj);             // PUSH (ADD) DATA TO THE JSON ARRAY.

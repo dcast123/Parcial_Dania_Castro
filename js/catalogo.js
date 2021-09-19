@@ -179,3 +179,77 @@ function previewFile() {
       reader.readAsDataURL(file);
     }
 }
+
+
+
+
+function CTransaccion(codigo,Transaccion, Cantidad,produ) {
+    this.ID = codigo;
+    this.Transaccion = Transaccion;
+    this.Cantidad = Cantidad;
+    this.Producto = produ;
+  }
+
+
+var transacciones = [];        
+
+
+
+function addTransaccionArray(cod,transa,cant,prod){
+    console.log("Aca se carga");
+    console.log(cod,transa,cant,prod)
+
+
+    var objTransaccion = new CTransaccion(cod, transa, cant,prod);
+    this.transacciones.push(objTransaccion);
+}
+
+
+
+
+function BuscarTransaccion(ID){
+    for(let index = 0; index < transacciones.length; index++){
+        if(transacciones[index].ID == ID){
+            return transacciones[index];
+        }
+    }
+    return null;
+}
+
+
+
+
+
+
+function addTransaccion (cod,trans,cant,prod){
+
+
+
+    //Validar campos
+  
+
+    cargarDatosTrans(cod,prod,trans,cant);
+
+
+    //Agregar el Transaccion al array
+    addTransaccionArray();
+      
+    //guardar en Local Storage el Transaccion
+      setTransaccion();
+
+
+}
+
+//Guardar objeto en localStorage
+
+function setTransaccion(){
+    localStorage.setItem('LSTransaccion', JSON.stringify(this.transacciones));
+
+}
+
+//Función para cargar los datos al array
+function cargarDatosTrans(){
+    if(localStorage.getItem('LSTransaccion')){
+ transacciones = JSON.parse(localStorage.getItem('LSTransaccion'));}
+ return;
+}
